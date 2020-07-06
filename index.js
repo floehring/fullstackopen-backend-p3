@@ -63,7 +63,7 @@ app.post('/api/persons', (req, res) => {
 
     console.log(body)
 
-    if (!body) {
+    if (!body.name || !body.number) {
         return res.status(400).json({
             error: 'content missing'
         })
@@ -73,6 +73,13 @@ app.post('/api/persons', (req, res) => {
         name: body.name,
         number: body.number,
         id: generateId(),
+    }
+
+    // Check if person already exists in db
+    if (persons.find(p => person.name === p.name)) {
+        return res.status(400).json({
+            error: 'name must be unique'
+        })
     }
 
     persons = persons.concat(person)
