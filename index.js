@@ -1,9 +1,15 @@
 const express = require('express')
 const app = express()
-
+const morgan = require('morgan')
 app.use(express.json())
 
 const PORT = 3001
+
+app.use(
+    morgan(
+        'tiny'
+    )
+);
 
 let persons = [
     {
