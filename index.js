@@ -5,11 +5,13 @@ app.use(express.json())
 
 const PORT = 3001
 
+morgan.token("content", req => !req.body ? "" : JSON.stringify(req.body))
+
 app.use(
     morgan(
-        'tiny'
+        ":method :url :status :res[content-length] - :response-time ms :content"
     )
-);
+)
 
 let persons = [
     {
