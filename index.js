@@ -34,14 +34,6 @@ app.delete('/api/persons/:id', (req, res) => {
     res.status(204).end()
 })
 
-const generateId = () => {
-    const maxId = persons.length > 0
-        ? Math.max(...persons.map(p => p.id))
-        : 0
-
-    return maxId + 1
-}
-
 app.post('/api/persons', (req, res) => {
     const body = req.body
 
@@ -53,22 +45,12 @@ app.post('/api/persons', (req, res) => {
         })
     }
 
-    const person = {
+    const person = new Person({
         name: body.name,
         number: body.number,
-        id: generateId(),
-    }
+    })
 
-    // Check if person already exists in db
-    if (persons.find(p => person.name === p.name)) {
-        return res.status(400).json({
-            error: 'name must be unique'
-        })
-    }
-
-    persons = persons.concat(person)
-
-    res.json(person)
+    person.save().then(savedPerson => res.json(savedPerson))
 })
 
 app.get('/info', (request, response) => {
