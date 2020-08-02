@@ -68,11 +68,17 @@ app.put('/api/persons/:id', (req, res, next) => {
         number: body.number,
     }
 
+    console.log(req.params.id, person)
+
     // By default, findByIdAndUpdate() returns the document as it was before update was applied.
     // If you set new: true, findOneAndUpdate() will instead give you the object after update was applied.
-    Person.findByIdAndUpdate(req.params.id, person, {new: true})
+    Person.findByIdAndUpdate(req.params.id, person, {
+        new: true,
+        runValidators: true,
+        context: 'query'
+    })
         .then(updatedPerson => updatedPerson.toJSON())
-        .then(perons => res.json(person))
+        .then(person => res.json(person))
         .catch(error => next(error))
 })
 
