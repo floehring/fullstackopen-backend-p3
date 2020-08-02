@@ -25,13 +25,10 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/api/persons/:id', (req, res, next) => {
-    Person.findById(req.params.id).then(person => {
-        if (person) {
-            res.json(person);
-        } else {
-            res.status(404).end()
-        }
-    }).catch(error => next(error))
+    Person.findById(req.params.id)
+        .then(person => person.toJSON())
+        .then(person => person ? res.json(person) : res.status(404).end())
+        .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
@@ -74,7 +71,8 @@ app.put('/api/persons/:id', (req, res, next) => {
     // By default, findByIdAndUpdate() returns the document as it was before update was applied.
     // If you set new: true, findOneAndUpdate() will instead give you the object after update was applied.
     Person.findByIdAndUpdate(req.params.id, person, {new: true})
-        .then(updatedPerson => res.json(updatedPerson))
+        .then(updatedPerson => updatedPerson.toJSON())
+        .then(perons => res.json(person))
         .catch(error => next(error))
 })
 
