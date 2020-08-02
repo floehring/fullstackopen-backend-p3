@@ -41,7 +41,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
         }).catch(error => next(error))
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body
 
     console.log(body)
@@ -57,7 +57,10 @@ app.post('/api/persons', (req, res) => {
         number: body.number,
     })
 
-    person.save().then(savedPerson => res.json(savedPerson))
+    person.save()
+        .then(savedPerson => savedPerson.toJSON())
+        .then(person => res.json(person))
+        .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
@@ -91,8 +94,10 @@ const errorHandler = (error, request, response, next) => {
     console.error(error.message)
 
     // If the error is of type CastError, it gets processed by this errorHandler
-    if (error.name === 'CastError' && error.kind == 'ObjectId') {
+    if (error.name === 'CastError') {
         return response.status(400).send({error: 'malformatted id'})
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({error: error.message})
     }
 
     // next call passes the error to the next middleware. Since the error handler in this case is the
