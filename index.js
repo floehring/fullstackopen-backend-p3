@@ -74,10 +74,13 @@ app.use(unknownEndpoint)
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
 
+    // If the error is of type CastError, it gets processed by this errorHandler
     if (error.name === 'CastError' && error.kind == 'ObjectId') {
         return response.status(400).send({error: 'malformatted id'})
     }
 
+    // next call passes the error to the next middleware. Since the error handler in this case is the
+    // last middleware, it get's passed to the default error handler.
     next(error)
 }
 
