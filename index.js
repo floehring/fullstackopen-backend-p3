@@ -76,8 +76,9 @@ app.put('/api/persons/:id', (req, res, next) => {
 })
 
 app.get('/info', (request, response) => {
-    response.send(`<p> Phonebook has info for ${persons.length} people </p>
-            <p>${new Date()}</p>`)
+    Person.countDocuments().then(count =>
+        response.send(`<p> Phonebook has info for ${count} people </p>
+            <p>${new Date()}</p>`))
 })
 
 const unknownEndpoint = (request, response) => {
