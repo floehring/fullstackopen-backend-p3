@@ -60,6 +60,21 @@ app.post('/api/persons', (req, res) => {
     person.save().then(savedPerson => res.json(savedPerson))
 })
 
+app.put('/api/persons/:id', (req, res, next) => {
+    const body = req.body
+
+    const person = {
+        name: body.name,
+        number: body.number,
+    }
+
+    // By default, findByIdAndUpdate() returns the document as it was before update was applied.
+    // If you set new: true, findOneAndUpdate() will instead give you the object after update was applied.
+    Person.findByIdAndUpdate(req.params.id, person, {new: true})
+        .then(updatedPerson => res.json(updatedPerson))
+        .catch(error => next(error))
+})
+
 app.get('/info', (request, response) => {
     response.send(`<p> Phonebook has info for ${persons.length} people </p>
             <p>${new Date()}</p>`)
