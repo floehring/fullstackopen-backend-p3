@@ -10,7 +10,7 @@ const password = process.argv[2]
 const url =
     `mongodb+srv://floeh:${password}@cluster0.mgukg.mongodb.net/phonebook?retryWrites=true&w=majority`
 
-mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const personSchema = new mongoose.Schema({
     name: String,
@@ -38,7 +38,7 @@ if (process.argv.length === 3) {
         number: process.argv[4],
     })
 
-    person.save().then(result => {
+    person.save().then(() => {
         console.log(`person ${person} saved!`)
         mongoose.connection.close()
     })

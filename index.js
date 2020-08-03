@@ -10,11 +10,11 @@ app.use(express.static('build'))
 
 const PORT = process.env.PORT || 3001
 
-morgan.token("content", req => !req.body ? "" : JSON.stringify(req.body))
+morgan.token('content', req => !req.body ? '' : JSON.stringify(req.body))
 
 app.use(
     morgan(
-        ":method :url :status :res[content-length] - :response-time ms :content"
+        ':method :url :status :res[content-length] - :response-time ms :content'
     )
 )
 
@@ -33,7 +33,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 app.delete('/api/persons/:id', (req, res, next) => {
     Person.findByIdAndRemove(req.params.id)
-        .then(result => {
+        .then(() => {
             res.status(204).end()
         }).catch(error => next(error))
 })
@@ -89,7 +89,7 @@ app.get('/info', (request, response) => {
 })
 
 const unknownEndpoint = (request, response) => {
-    response.status(404).send({error: 'unknown endpoint'})
+    response.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint)
@@ -99,9 +99,9 @@ const errorHandler = (error, request, response, next) => {
 
     // If the error is of type CastError, it gets processed by this errorHandler
     if (error.name === 'CastError') {
-        return response.status(400).send({error: 'malformatted id'})
+        return response.status(400).send({ error: 'malformatted id' })
     } else if (error.name === 'ValidationError') {
-        return response.status(400).json({error: error.message})
+        return response.status(400).json({ error: error.message })
     }
 
     // next call passes the error to the next middleware. Since the error handler in this case is the
